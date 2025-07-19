@@ -98,7 +98,14 @@ export class AppleDevDocsClient {
 
   async getSymbol(path: string): Promise<SymbolData> {
     // Remove leading slash if present
-    const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+    let cleanPath = path.startsWith('/') ? path.slice(1) : path;
+    
+    // If path doesn't start with 'documentation/' and doesn't contain '/', 
+    // assume it's a framework/module name and prefix it
+    if (!cleanPath.startsWith('documentation/') && !cleanPath.includes('/')) {
+      cleanPath = `documentation/${cleanPath}`;
+    }
+    
     const url = `${BASE_URL}/${cleanPath}.json`;
     return await this.makeRequest<SymbolData>(url);
   }

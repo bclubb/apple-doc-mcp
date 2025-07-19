@@ -50,13 +50,13 @@ class AppleDevDocsMcpServer {
           },
           {
             name: 'get_documentation',
-            description: 'Get detailed documentation for any symbol, class, struct, or framework (automatically detects and handles both)',
+            description: 'Get detailed documentation for any symbol, class, struct, or framework. Handles both framework names and full documentation paths automatically. Examples: "SwiftUI", "UIViewController", "documentation/SwiftUI/View", "FoundationModels"',
             inputSchema: {
               type: 'object',
               properties: {
                 path: {
                   type: 'string',
-                  description: 'Documentation path (e.g., "documentation/SwiftUI/View") or framework name (e.g., "SwiftUI")',
+                  description: 'Framework name (e.g., "SwiftUI", "UIKit", "FoundationModels") or full documentation path (e.g., "documentation/SwiftUI/View", "documentation/UIKit/UIViewController")',
                 },
               },
               required: ['path'],
@@ -64,25 +64,25 @@ class AppleDevDocsMcpServer {
           },
           {
             name: 'search_symbols',
-            description: 'Search for symbols across Apple frameworks (supports wildcards like "RPBroadcast*")',
+            description: 'Search for symbols across Apple frameworks with wildcard support (* and ?). Examples: "RPBroadcast*", "*Controller", "*View*". Can search globally or within specific framework.',
             inputSchema: {
               type: 'object',
               properties: {
                 query: {
                   type: 'string',
-                  description: 'Search query (supports wildcards: * and ?)',
+                  description: 'Search query with wildcard support. Examples: "RPBroadcast*" (prefix), "*Controller" (suffix), "*View*" (contains)',
                 },
                 framework: {
                   type: 'string',
-                  description: 'Optional: Search within specific framework only',
+                  description: 'Optional: Search within specific framework only (e.g., "UIKit", "SwiftUI")',
                 },
                 symbolType: {
                   type: 'string',
-                  description: 'Optional: Filter by symbol type (class, protocol, struct, etc.)',
+                  description: 'Optional: Filter by symbol type (class, protocol, struct, enum, function, etc.)',
                 },
                 platform: {
                   type: 'string',
-                  description: 'Optional: Filter by platform (iOS, macOS, etc.)',
+                  description: 'Optional: Filter by platform (iOS, macOS, tvOS, watchOS, visionOS)',
                 },
                 maxResults: {
                   type: 'number',
@@ -177,6 +177,7 @@ class AppleDevDocsMcpServer {
     const { path } = args;
     
     try {
+      // Try the path as-is first
       const data = await this.client.getSymbol(path);
       
       const title = data.metadata?.title || 'Symbol';

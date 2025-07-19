@@ -11,7 +11,6 @@ A Model Context Protocol (MCP) server that provides seamless access to Apple's D
   - `get_documentation` - Get symbol or framework docs (handles both automatically)
   - `search_symbols` - Search with wildcards and filters 
   - `check_updates` - Check for repository updates via git
-- **🚀 Pre-built Distribution**: No more manual building required - clone and use immediately
 - **🧹 Dynamic Framework Discovery**: Removed all hard-coded framework lists for fully dynamic operation
 - **⚡ Automatic Update Notifications**: Server automatically checks for updates on startup and notifies users when new versions are available
 - **🛡️ Enhanced Error Handling**: Better null safety and professional error messages
@@ -45,7 +44,7 @@ A Model Context Protocol (MCP) server that provides seamless access to Apple's D
    npm install
    ```
    
-3. **Build the server:**
+3. **Build the server (required):**
    ```bash
    npm run build
    ```
@@ -194,7 +193,7 @@ Check for available updates from the git repository.
 **"0 tools" Showing Up**
 - This usually means the server isn't starting properly
 - Check the file path in your configuration is correct and absolute
-- The `dist` directory is included - no build step required
+- Make sure you ran `npm run build` to create the `dist` directory
 - Try testing the server directly: `node /path/to/apple-doc-mcp/dist/index.js`
 
 **No Results Found**

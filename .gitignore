@@ -8,6 +8,7 @@ package-lock.json
 
 # Build outputs
 build/
+dist/
 *.tsbuildinfo
 
 # Environment files
