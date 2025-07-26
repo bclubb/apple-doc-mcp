@@ -105,3 +105,11 @@ node dist/index.js
 ```
 
 The server automatically checks for git updates on startup and displays notifications if updates are available.
+
+## MCP Development Guidelines
+
+For detailed information about when Claude Code restarts are required during development, see [MCP_DEVELOPMENT.md](./MCP_DEVELOPMENT.md). This guide explains:
+- Which changes require restarting Claude Code
+- Which changes update live without restart
+- How to detect when a restart is needed
+- Development workflow best practices
