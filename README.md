@@ -4,6 +4,13 @@ A Model Context Protocol (MCP) server that provides seamless access to Apple's D
 
 ## 📋 Changelog
 
+### Latest Update - Beta/Deprecated API Detection
+- **⚠️ Smart API Status Warnings**: Automatically detects and displays beta and deprecated APIs with clear warnings
+  - `⚠️ **BETA API**` for beta frameworks like FoundationModels  
+  - `⛔ **DEPRECATED**` with Apple's replacement guidance for deprecated APIs
+- **🎯 Enhanced Developer Safety**: Prevent accidentally using deprecated APIs
+- **📱 Apple's Official Messages**: Shows Apple's exact deprecation messages and replacement recommendations
+
 ### 1.0.1 Update
 - **🎯 Intelligent Fallback System**: When searching for frameworks instead of symbols (e.g., "SwiftUI"), the server now provides helpful framework information and guidance on correct usage
 - **🔧 Tool Consolidation**: Streamlined from 4 tools to 4 focused tools:
@@ -17,6 +24,7 @@ A Model Context Protocol (MCP) server that provides seamless access to Apple's D
 
 ## 🚀 Features
 
+- **⚠️ API Status Detection**: Automatic beta and deprecated API warnings with Apple's guidance
 - **🔍 Smart Search**: Find symbols across all Apple frameworks with wildcard support (`*`, `?`)
 - **📚 Framework Browsing**: Explore any Apple framework structure (SwiftUI, UIKit, Foundation, etc.)
 - **📖 Detailed Documentation**: Get comprehensive symbol documentation with examples
@@ -151,8 +159,9 @@ The AI will automatically use the MCP tools to fetch current Apple documentation
 Browse all available Apple frameworks and technologies.
 
 ### `get_documentation`
-Get detailed documentation for symbols or frameworks (automatically detects type).
+Get detailed documentation for symbols or frameworks with automatic beta/deprecated status warnings.
 - `path` (required): Documentation path (e.g., "documentation/SwiftUI/View") or framework name (e.g., "SwiftUI")
+- Automatically displays `⚠️ **BETA API**` or `⛔ **DEPRECATED**` warnings when applicable
 
 **Examples**:
 ```json

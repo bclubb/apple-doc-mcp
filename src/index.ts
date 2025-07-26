@@ -50,7 +50,7 @@ class AppleDevDocsMcpServer {
           },
           {
             name: 'get_documentation',
-            description: 'Get detailed documentation for any symbol, class, struct, or framework. Handles both framework names and full documentation paths automatically. Examples: "SwiftUI", "UIViewController", "documentation/SwiftUI/View", "FoundationModels"',
+            description: 'Get detailed documentation for any symbol, class, struct, or framework. Automatically shows beta/deprecated status with warnings. Handles both framework names and full documentation paths. Examples: "SwiftUI", "UIViewController", "documentation/SwiftUI/View", "FoundationModels"',
             inputSchema: {
               type: 'object',
               properties: {
@@ -173,6 +173,32 @@ class AppleDevDocsMcpServer {
     };
   }
 
+  private getAPIStatusIndicator(metadata: any): string {
+    const platforms = metadata?.platforms || [];
+    
+    // Check if all platforms are beta
+    const allBeta = platforms.length > 0 && platforms.every((p: any) => p.beta === true);
+    
+    // Check if any platform is beta
+    const someBeta = platforms.some((p: any) => p.beta === true);
+    
+    // Check if deprecated (look for deprecatedAt field in platforms)
+    const deprecatedPlatforms = platforms.filter((p: any) => p.deprecatedAt);
+    const isDeprecated = deprecatedPlatforms.length > 0;
+    
+    if (isDeprecated) {
+      // Get the deprecation message from the first deprecated platform
+      const message = deprecatedPlatforms[0]?.message || 'This API is deprecated';
+      return `⛔ **DEPRECATED**\n\n*${message}*\n\n`;
+    } else if (allBeta) {
+      return '⚠️ **BETA API**\n\n';
+    } else if (someBeta) {
+      return '⚠️ **BETA** on some platforms\n\n';
+    }
+    
+    return '';
+  }
+
   private async handleGetDocumentation(args: any) {
     const { path } = args;
     
@@ -184,9 +210,11 @@ class AppleDevDocsMcpServer {
       const kind = data.metadata?.symbolKind || 'Unknown';
       const platforms = this.client.formatPlatforms(data.metadata?.platforms);
       const description = this.client.extractText(data.abstract);
+      const statusIndicator = this.getAPIStatusIndicator(data.metadata);
       
       let content = [
         `# ${title}\n`,
+        statusIndicator,
         `**Type:** ${kind}`,
         `**Platforms:** ${platforms}\n`,
         '## Overview',
@@ -266,9 +294,11 @@ class AppleDevDocsMcpServer {
       const title = data.metadata?.title || frameworkName;
       const description = this.client.extractText(data.abstract);
       const platforms = this.client.formatPlatforms(data.metadata?.platforms);
+      const statusIndicator = this.getAPIStatusIndicator(data.metadata);
       
               const content = [
           `# 🔍 Framework Detected: ${title}\n`,
+          statusIndicator,
           `⚠️ **You searched for a framework instead of a specific symbol.**`,
           `To access symbols within this framework, use the format: **framework/symbol**`,
           `**Example:** \`documentation/${frameworkName}/View\` instead of \`${originalPath}\`\n`,
